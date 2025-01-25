@@ -43,7 +43,6 @@ class GetAllDishByTypeInteractor:
         )
 
 
-
 class NewDishInteractor:
     def __init__(
         self,
@@ -76,13 +75,17 @@ class GenerateMenuInteractor:
     ) -> None:
         self._dish_gateway = dish_gateway
 
-    async def __call__(self, period: int) -> dict[str, dict[str, Optional[entities.DishDM]]]:
+    async def __call__(
+        self, period: int
+    ) -> dict[str, dict[str, Optional[entities.DishDM]]]:
         """Генерация меню с учётом всех типов блюд."""
 
         dishes = await self._dish_gateway.read_all()
 
         dishes_by_type = {
-            dish_type.value: [dish for dish in dishes if dish.dish_type == dish_type.value]
+            dish_type.value: [
+                dish for dish in dishes if dish.dish_type == dish_type.value
+            ]
             for dish_type in entities.DishType.__members__.values()
         }
 

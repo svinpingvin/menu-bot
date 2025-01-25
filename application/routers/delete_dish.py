@@ -1,5 +1,10 @@
 from aiogram import Router
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from dishka import FromDishka
@@ -19,7 +24,9 @@ def type_keyboard():
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="Завтрак", callback_data="delete_type_breakfast"),
+                InlineKeyboardButton(
+                    text="Завтрак", callback_data="delete_type_breakfast"
+                ),
                 InlineKeyboardButton(text="Обед", callback_data="delete_type_lunch"),
                 InlineKeyboardButton(text="Ужин", callback_data="delete_type_dinner"),
             ]
@@ -39,7 +46,9 @@ def pagination_keyboard(page: int, has_next: bool) -> InlineKeyboardMarkup:
 @router.message(lambda msg: msg.text == "Удалить блюдо")
 async def handle_delete_dish_start(message: Message, state: FSMContext) -> None:
     """Начало процесса удаления блюда."""
-    await message.answer("Выберите тип блюда для удаления:", reply_markup=type_keyboard())
+    await message.answer(
+        "Выберите тип блюда для удаления:", reply_markup=type_keyboard()
+    )
     await state.set_state(DeleteDishStates.choosing_type)
 
 
@@ -75,7 +84,9 @@ async def send_dish_list(
     dishes_per_page = 5
     offset = page * dishes_per_page
 
-    dishes = await read_all_by_dish_type_interactor(dish_type=dish_type, offset=offset, limit=dishes_per_page)
+    dishes = await read_all_by_dish_type_interactor(
+        dish_type=dish_type, offset=offset, limit=dishes_per_page
+    )
 
     if not dishes:
         await message.answer("Нет блюд для отображения.")
@@ -91,8 +102,7 @@ async def send_dish_list(
     buttons = [
         [
             InlineKeyboardButton(
-                text=f"Удалить {dish.name}",
-                callback_data=f"delete_{dish.uuid}"
+                text=f"Удалить {dish.name}", callback_data=f"delete_{dish.uuid}"
             )
         ]
         for dish in dishes
@@ -111,7 +121,9 @@ async def send_dish_list(
     if pagination_buttons:
         buttons.append(pagination_buttons)
 
-    buttons.append([InlineKeyboardButton(text="❌ Закрыть", callback_data="close_pagination")])
+    buttons.append(
+        [InlineKeyboardButton(text="❌ Закрыть", callback_data="close_pagination")]
+    )
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -120,7 +132,6 @@ async def send_dish_list(
         await message.message.edit_text(text, reply_markup=keyboard)
     else:
         await message.answer(text, reply_markup=keyboard)
-
 
 
 @router.callback_query(lambda c: c.data.startswith("delete_"))
@@ -142,18 +153,18 @@ async def handle_delete_dish(
         page = data.get("page", 0)
 
         await send_dish_list(
-            callback,
-            dish_type,
-            page,
-            read_all_by_dish_type_interactor
+            callback, dish_type, page, read_all_by_dish_type_interactor
         )
     except Exception as e:
         await callback.answer(f"Ошибка: {e}")
 
 
-
 @router.callback_query(lambda c: c.data.startswith("page_"))
-async def handle_pagination(callback: CallbackQuery, state: FSMContext, get_dishes_interactor: FromDishka[GetAllDishByTypeInteractor]) -> None:
+async def handle_pagination(
+    callback: CallbackQuery,
+    state: FSMContext,
+    get_dishes_interactor: FromDishka[GetAllDishByTypeInteractor],
+) -> None:
     """Обработка кнопок пагинации."""
     page = int(callback.data.split("_")[1])
     data = await state.get_data()

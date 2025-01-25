@@ -4,7 +4,13 @@ from aiogram import Dispatcher, Bot
 from dishka import make_async_container
 from dishka.integrations.aiogram import setup_dishka
 
-from application.routers import add_dish, delete_dish, generate_menu, all_dishes, main_menu
+from application.routers import (
+    add_dish,
+    delete_dish,
+    generate_menu,
+    all_dishes,
+    main_menu,
+)
 from config import Config
 from ioc import AppProvider
 
