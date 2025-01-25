@@ -1,7 +1,16 @@
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+
+from domain.entities import DishType
+
+dish_type_enum = ENUM(
+    *DishType.__members__.values(),
+    name="dish_type_enum",
+    create_type=True,
+)
 
 
 class Base(DeclarativeBase):
@@ -18,3 +27,4 @@ class Dish(Base):
     )
     name: Mapped[str]
     random_weight: Mapped[int]
+    dish_type: Mapped[str] = mapped_column(dish_type_enum, nullable=False)

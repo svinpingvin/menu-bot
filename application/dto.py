@@ -5,3 +5,4 @@ from dataclasses import dataclass
 class NewDishDTO:
     name: str
     random_weight: int
+    dish_type: str

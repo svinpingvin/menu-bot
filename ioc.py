@@ -10,7 +10,10 @@ from application import interfaces
 from application.interactors import (
     GetDishInteractor,
     NewDishInteractor,
-    GetAllDishInteractor, GenerateMenuInteractor,
+    GetAllDishInteractor,
+    GenerateMenuInteractor,
+    GetAllDishByTypeInteractor,
+    DeleteDishInteractor,
 )
 from config import Config
 from infrastructure.database import new_session_maker
@@ -53,10 +56,16 @@ class AppProvider(Provider):
     dish_gateway = provide(
         DishGateway,
         scope=Scope.REQUEST,
-        provides=AnyOf[interfaces.DishReader, interfaces.DishSaver],
+        provides=AnyOf[
+            interfaces.DishReader, interfaces.DishSaver, interfaces.DishRemover
+        ],
     )
 
     get_dish_interactor = provide(GetDishInteractor, scope=Scope.REQUEST)
     get_all_dish_interactor = provide(GetAllDishInteractor, scope=Scope.REQUEST)
+    get_all_dish_by_type_interactor = provide(
+        GetAllDishByTypeInteractor, scope=Scope.REQUEST
+    )
     create_new_dish_interactor = provide(NewDishInteractor, scope=Scope.REQUEST)
+    delete_dish_interactor = provide(DeleteDishInteractor, scope=Scope.REQUEST)
     generate_menu_interactor = provide(GenerateMenuInteractor, scope=Scope.REQUEST)
