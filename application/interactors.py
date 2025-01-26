@@ -13,8 +13,8 @@ class GetDishInteractor:
     ) -> None:
         self._dish_gateway = dish_gateway
 
-    async def __call__(self, uuid: str) -> entities.DishDM | None:
-        return await self._dish_gateway.read_by_uuid(uuid)
+    async def __call__(self, uuid: str, owner: int) -> entities.DishDM | None:
+        return await self._dish_gateway.read_by_uuid(uuid=uuid, owner=owner)
 
 
 class GetAllDishInteractor:
@@ -24,8 +24,8 @@ class GetAllDishInteractor:
     ) -> None:
         self._dish_gateway = dish_gateway
 
-    async def __call__(self) -> list[entities.DishDM] | None:
-        return await self._dish_gateway.read_all()
+    async def __call__(self, owner: int) -> list[entities.DishDM] | None:
+        return await self._dish_gateway.read_all(owner=owner)
 
 
 class GetAllDishByTypeInteractor:
@@ -36,10 +36,10 @@ class GetAllDishByTypeInteractor:
         self._dish_gateway = dish_gateway
 
     async def __call__(
-        self, dish_type: str = None, offset: int = 0, limit: int = 5
+        self, dish_type: str, owner: int, offset: int = 0, limit: int = 5
     ) -> list[entities.DishDM] | None:
         return await self._dish_gateway.read_all_by_dish_type(
-            dish_type=dish_type, offset=offset, limit=limit
+            dish_type=dish_type, offset=offset, limit=limit, owner=owner
         )
 
 
@@ -61,6 +61,7 @@ class NewDishInteractor:
             name=dto.name,
             random_weight=dto.random_weight,
             dish_type=dto.dish_type,
+            owner=dto.owner,
         )
 
         await self._dish_gateway.save(dish)
@@ -76,11 +77,11 @@ class GenerateMenuInteractor:
         self._dish_gateway = dish_gateway
 
     async def __call__(
-        self, period: int
+        self, period: int, owner: int
     ) -> dict[str, dict[str, Optional[entities.DishDM]]]:
         """Генерация меню с учётом всех типов блюд."""
 
-        dishes = await self._dish_gateway.read_all()
+        dishes = await self._dish_gateway.read_all(owner=owner)
 
         dishes_by_type = {
             dish_type.value: [
@@ -123,5 +124,5 @@ class DeleteDishInteractor:
     ) -> None:
         self._dish_gateway = dish_gateway
 
-    async def __call__(self, uuid: str) -> None:
-        return await self._dish_gateway.remove_by_uuid(uuid)
+    async def __call__(self, uuid: str, owner: int) -> None:
+        return await self._dish_gateway.remove_by_uuid(uuid=uuid, owner=owner)

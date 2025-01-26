@@ -45,7 +45,7 @@ async def handle_days_selection(
     days = int(callback.data.split("_")[1])
 
     try:
-        menu = await generate_menu_interactor(period=days)
+        menu = await generate_menu_interactor(period=days, owner=callback.message.chat.id)
         formatted_menu = format_menu(menu)
         await callback.message.edit_text(
             f"Сгенерированное меню:\n\n{formatted_menu}", reply_markup=None

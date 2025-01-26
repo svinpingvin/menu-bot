@@ -28,3 +28,4 @@ class Dish(Base):
     name: Mapped[str]
     random_weight: Mapped[int]
     dish_type: Mapped[str] = mapped_column(dish_type_enum, nullable=False)
+    owner: Mapped[int] = mapped_column(nullable=False)

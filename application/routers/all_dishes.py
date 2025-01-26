@@ -14,7 +14,7 @@ async def handle_all_dishes(
 ) -> None:
     """Обработка команды 'Список блюд'. Показывает все блюда, сгруппированные по типам."""
     try:
-        all_dishes = await get_all_dish_interactor()
+        all_dishes = await get_all_dish_interactor(owner=message.chat.id)
         if not all_dishes:
             await message.answer("Список блюд пуст.")
             return
