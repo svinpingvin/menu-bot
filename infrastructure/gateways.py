@@ -68,6 +68,7 @@ class DishGateway(interfaces.DishSaver, interfaces.DishReader, interfaces.DishRe
         return entities.DishDM(
             uuid=row.uuid,
             name=row.name,
+            dish_type=row.dish_type,
             random_weight=row.random_weight,
             owner=row.owner,
         )
