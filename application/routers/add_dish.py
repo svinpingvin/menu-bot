@@ -85,7 +85,9 @@ async def handle_enter_name(
     name = message.text
 
     try:
-        dto = NewDishDTO(name=name, random_weight=weight, dish_type=dish_type, owner=message.chat.id)
+        dto = NewDishDTO(
+            name=name, random_weight=weight, dish_type=dish_type, owner=message.chat.id
+        )
         await create_new_dish_interactor(dto)
         await message.answer(
             f"Блюдо '{name}' успешно добавлено как '{dish_type}' с весом {weight}.",

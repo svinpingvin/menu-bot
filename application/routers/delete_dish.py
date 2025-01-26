@@ -83,7 +83,7 @@ async def send_dish_list(
     """Отправляет список блюд с учётом пагинации."""
     dishes_per_page = 5
     offset = page * dishes_per_page
-    owner=message.chat.id if isinstance(message, Message) else message.message.chat.id
+    owner = message.chat.id if isinstance(message, Message) else message.message.chat.id
 
     dishes = await read_all_by_dish_type_interactor(
         dish_type=dish_type, offset=offset, limit=dishes_per_page, owner=owner
