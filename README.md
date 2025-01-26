@@ -45,14 +45,8 @@ Menu-Bot is a Telegram bot designed to help users generate meal plans and manage
 
 #### Using Docker Compose
 
-1. Build and start the services:
    ```bash
-   docker-compose up --build
-   ```
-
-2. Run Alembic migrations to set up the database schema:
-   ```bash
-   docker exec -it menu-bot poetry run alembic upgrade head
+   docker-compose up --build -d
    ```
 
 #### Without Docker
